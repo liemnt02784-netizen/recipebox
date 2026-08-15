@@ -119,14 +119,15 @@ export class AuthService {
     const frontendUrl = this.resolveFrontendUrl(originHeader);
     const verifyUrl = `${frontendUrl}/verify-email?token=${rawToken}`;
 
-    try {
-      await this.mailService.sendVerificationEmail(email, verifyUrl);
-    } catch (error) {
+    // KHÔNG await — gửi mail là tác vụ mạng ra ngoài (có thể chậm/bị chặn tuỳ môi trường host,
+    // đã có timeout phòng hờ ở MailService) — không được để nó chặn response HTTP của
+    // register()/resendVerificationEmail() phía trên, đúng như comment "best-effort" đã ghi.
+    this.mailService.sendVerificationEmail(email, verifyUrl).catch((error: unknown) => {
       this.logger.error(
         `Gửi email xác thực tới ${email} thất bại — kiểm tra GMAIL_USER/GMAIL_APP_PASSWORD trong .env`,
         error instanceof Error ? error.stack : String(error),
       );
-    }
+    });
   }
 
   /** Dùng khi user đổi email (bị reset isEmailVerified) hoặc lỡ mất mail xác thực đầu tiên. */
@@ -185,16 +186,15 @@ export class AuthService {
     const frontendUrl = this.resolveFrontendUrl(originHeader);
     const resetUrl = `${frontendUrl}/reset-password?token=${rawToken}`;
 
-    try {
-      await this.mailService.sendPasswordResetEmail(user.email, resetUrl);
-    } catch (error) {
-      // Không để lỗi gửi mail (vd: GMAIL_APP_PASSWORD chưa cấu hình) làm lộ 500 ra frontend —
-      // vẫn trả message chung chung, chỉ log lại để dev tự biết mà sửa .env.
+    // KHÔNG await — gửi mail là tác vụ mạng ra ngoài, có thể chậm hoặc bị chặn tuỳ môi trường
+    // host (đã có timeout phòng hờ ở MailService) — response trả về generic message NGAY, không
+    // chờ email, vừa nhanh vừa đúng bảo mật (không lộ qua độ trễ việc email có tồn tại hay không).
+    this.mailService.sendPasswordResetEmail(user.email, resetUrl).catch((error: unknown) => {
       this.logger.error(
         `Gửi email reset password tới ${user.email} thất bại — kiểm tra GMAIL_USER/GMAIL_APP_PASSWORD trong .env`,
         error instanceof Error ? error.stack : String(error),
       );
-    }
+    });
 
     return genericResult;
   }

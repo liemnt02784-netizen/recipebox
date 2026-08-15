@@ -15,6 +15,12 @@ export class MailService {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: { user, pass },
+      // Không set timeout thì nodemailer có thể treo VÔ THỜI HẠN nếu môi trường mạng chặn/lọc
+      // cổng SMTP ra ngoài (rất hay gặp ở gói hosting free như Render) — khiến cả request HTTP
+      // đang await nó cũng treo theo, không bao giờ trả response. Ép nó fail nhanh trong 10s.
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 10_000,
     });
   }
 
