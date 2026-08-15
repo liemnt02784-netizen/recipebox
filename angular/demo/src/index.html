@@ -17,10 +17,14 @@
   </head>
   <body>
     <script>
-      // Chạy dev cục bộ: để trống ('') — app tự nhận diện backend qua hostname trình duyệt.
-      // Sau khi deploy backend (Render...) thật: điền URL đó vào đây, vd:
-      // window.__API_BASE_URL__ = 'https://ten-app-cua-ban.onrender.com';
-      window.__API_BASE_URL__ = '';
+      // Chạy local (localhost hoặc IP LAN 192.168.x.x): để trống — app tự nhận diện backend qua
+      // hostname trình duyệt (xem api-base.ts). Chỉ khi KHÔNG phải local (tức đang chạy trên
+      // domain Vercel thật) mới dùng URL backend Render đã deploy — nếu hardcode URL Render vô
+      // điều kiện thì máy dev cục bộ cũng bị trỏ nhầm sang backend production.
+      window.__API_BASE_URL__ =
+        location.hostname === 'localhost' || /^(127\.|192\.168\.|10\.)/.test(location.hostname)
+          ? ''
+          : 'https://recipebox-j68m.onrender.com';
     </script>
     <app-root></app-root>
   </body>
