@@ -124,7 +124,8 @@ export class AuthService {
     // register()/resendVerificationEmail() phía trên, đúng như comment "best-effort" đã ghi.
     this.mailService.sendVerificationEmail(email, verifyUrl).catch((error: unknown) => {
       this.logger.error(
-        `Gửi email xác thực tới ${email} thất bại — kiểm tra RESEND_API_KEY trong .env`,
+        `Gửi email xác thực tới ${email} thất bại — kiểm tra RESEND_API_KEY/domain trong Resend.` +
+          ` Link xác thực (dùng tạm để test khi email chưa gửi được): ${verifyUrl}`,
         error instanceof Error ? error.stack : String(error),
       );
     });
@@ -191,7 +192,8 @@ export class AuthService {
     // chờ email, vừa nhanh vừa đúng bảo mật (không lộ qua độ trễ việc email có tồn tại hay không).
     this.mailService.sendPasswordResetEmail(user.email, resetUrl).catch((error: unknown) => {
       this.logger.error(
-        `Gửi email reset password tới ${user.email} thất bại — kiểm tra RESEND_API_KEY trong .env`,
+        `Gửi email reset password tới ${user.email} thất bại — kiểm tra RESEND_API_KEY/domain trong Resend.` +
+          ` Link reset (dùng tạm để test khi email chưa gửi được): ${resetUrl}`,
         error instanceof Error ? error.stack : String(error),
       );
     });

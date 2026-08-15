@@ -22,7 +22,7 @@ export class MailService {
   constructor(private readonly configService: ConfigService) {
     const apiKey = this.configService.getOrThrow<string>('RESEND_API_KEY');
     this.resend = new Resend(apiKey);
-    this.fromAddress = this.configService.get<string>('RESEND_FROM') ?? 'My Recipe Box <onboarding@resend.dev>';
+    this.fromAddress = this.configService.get<string>('RESEND_FROM') ?? 'onboarding@resend.dev';
   }
 
   async sendPasswordResetEmail(to: string, resetUrl: string): Promise<void> {
