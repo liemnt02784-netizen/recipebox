@@ -1,0 +1,94 @@
+<section class="page">
+  <h1 class="page-title">{{ i18n.t('orders.pageTitle') }}</h1>
+
+  <div class="order-grid">
+    @if (store.loading()) {
+      @for (i of [1,2,3]; track i) {
+        <div class="order-card order-skeleton" aria-hidden="true">
+          <div class="order-card-inner">
+            <div class="order-thumb skeleton-block"></div>
+            <div class="order-body">
+              <span class="skeleton-block skeleton-line-title"></span>
+              <span class="skeleton-block skeleton-line-sub"></span>
+            </div>
+          </div>
+        </div>
+      }
+    } @else {
+    @for (order of store.orders(); track order.id) {
+      <mat-card class="order-card" appearance="outlined">
+        <div class="order-card-inner">
+          @if (order.recipe) {
+            <img [src]="order.recipe.imgUrl" [alt]="order.recipe.name" class="order-thumb" />
+          }
+          <div class="order-body">
+            <div class="order-heading">
+              <span class="order-name">{{ order.recipe?.name ?? '—' }}</span>
+              <span class="order-status" [class]="'status-' + order.status">{{ statusLabel(order.status) }}</span>
+              @if (canHide(order)) {
+                <button matIconButton type="button" [matMenuTriggerFor]="orderMenu" [attr.aria-label]="i18n.t('orders.moreActions')">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #orderMenu="matMenu">
+                  <button mat-menu-item type="button" (click)="confirmHideOrder(order)">
+                    <mat-icon>delete_outline</mat-icon>{{ i18n.t('orders.hideAction') }}
+                  </button>
+                </mat-menu>
+              }
+            </div>
+
+            @if (editingId() === order.id) {
+              <div class="portion-edit">
+                <button matIconButton type="button" (click)="decrementEditing()" [disabled]="editingPortions() <= 1" [attr.aria-label]="i18n.t('detail.decreasePortion')">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <span class="portion-edit-count">{{ editingPortions() }} {{ i18n.t('detail.portionSuffix') }}</span>
+                <button matIconButton type="button" (click)="incrementEditing()" [attr.aria-label]="i18n.t('detail.increasePortion')">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <button matIconButton type="button" (click)="saveEdit(order.id)" [attr.aria-label]="i18n.t('orders.saveEdit')">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button matIconButton type="button" (click)="cancelEdit()" [attr.aria-label]="i18n.t('common.cancel')">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            } @else {
+              <p class="order-portions">{{ order.portions }} {{ i18n.t('detail.portionSuffix') }}</p>
+            }
+
+            @if (order.status === 'cancelled' && order.cancelReason) {
+              <p class="order-cancel-reason">{{ i18n.t('orders.cancelReasonLabel') }} {{ order.cancelReason }}</p>
+            }
+
+            <div class="order-actions">
+              @if (order.status === 'pending' && editingId() !== order.id) {
+                <button matButton type="button" (click)="startEdit(order)">
+                  <mat-icon>edit</mat-icon>{{ i18n.t('orders.edit') }}
+                </button>
+              }
+              @if (order.status === 'pending' || order.status === 'in_progress') {
+                <button matButton type="button" (click)="confirmCancelOrder(order)">
+                  <mat-icon>cancel</mat-icon>{{ i18n.t('orders.cancel') }}
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    } @empty {
+      <div class="empty-state">
+        <span class="material-symbols-outlined empty-state-icon">receipt_long</span>
+        <p class="empty-title">{{ i18n.t('orders.empty') }}</p>
+        <a matButton="outlined" class="empty-state-cta" routerLink="/recipes">
+          <mat-icon>restaurant_menu</mat-icon>{{ i18n.t('orders.emptyCta') }}
+        </a>
+      </div>
+    }
+    }
+  </div>
+
+  <a matButton class="back-link" routerLink="/recipes">
+    <mat-icon>arrow_back</mat-icon>{{ i18n.t('detail.back') }}
+  </a>
+</section>

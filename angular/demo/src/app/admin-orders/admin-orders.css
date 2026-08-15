@@ -1,0 +1,147 @@
+.page {
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 12px 16px 24px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 4px 0 16px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.search-field {
+  flex: 2;
+  min-width: 200px;
+}
+
+.status-field {
+  flex: 1;
+  min-width: 160px;
+}
+
+.order-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--mat-sys-surface-container-lowest);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.15s ease;
+}
+
+.order-card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.order-card-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 14px;
+  gap: 16px;
+}
+
+.order-thumb {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 12px;
+}
+
+.order-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.order-name {
+  font-size: 16px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-status {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+.status-pending { background: #fdecd2; color: #8a5a00; }
+.status-in_progress { background: #dbeafe; color: #1d4ed8; }
+.status-completed { background: #dcfce7; color: #15803d; }
+.status-cancelled { background: #fde2e1; color: #b91c1c; }
+
+.order-meta {
+  margin: 0;
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.order-cancel-reason {
+  margin: 0;
+  font-size: 13px;
+  color: #b91c1c;
+}
+
+.order-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.order-skeleton .order-body {
+  justify-content: center;
+  gap: 10px;
+}
+
+.skeleton-line-title {
+  display: block;
+  width: 50%;
+  height: 16px;
+  border-radius: 6px;
+}
+
+.skeleton-line-sub {
+  display: block;
+  width: 30%;
+  height: 13px;
+  border-radius: 6px;
+}
+
+.empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+  padding: 20px;
+}

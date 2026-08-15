@@ -1,0 +1,177 @@
+<div class="id-shell">
+  <div class="auth-card" [class.show-signup]="mode() === 'register'">
+    <!-- FORM ĐĂNG NHẬP — nửa trái -->
+    <div class="auth-panel auth-panel-signin" [attr.inert]="mode() !== 'login' ? '' : null">
+      <h1 class="auth-panel-title">{{ i18n.t('login.title') }}</h1>
+      <p class="auth-panel-subtitle">{{ i18n.t('login.subtitle') }}</p>
+
+      <form class="auth-form" [formRoot]="loginForm">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ i18n.t('login.identifierLabel') }}</mat-label>
+          <input
+            matInput
+            type="text"
+            autocomplete="username"
+            [formField]="loginForm.identifier"
+            (animationstart)="onLoginAutofill($event, 'identifier')"
+          />
+          @if (loginForm.identifier().errors(); as errors) {
+            <mat-error>{{ errors[0]?.message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ i18n.t('common.password') }}</mat-label>
+          <input
+            matInput
+            type="password"
+            autocomplete="current-password"
+            [formField]="loginForm.password"
+            (animationstart)="onLoginAutofill($event, 'password')"
+          />
+          @if (loginForm.password().errors(); as errors) {
+            <mat-error>{{ errors[0]?.message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <a class="id-link" routerLink="/forgot-password">{{ i18n.t('login.forgotLink') }}</a>
+
+        @if (loginErrorMessage(); as message) {
+          <p class="id-error">{{ message }}</p>
+        }
+
+        <div class="id-actions">
+          <button matButton="filled" type="submit" class="id-btn-pill" [disabled]="loginForm().submitting()">
+            {{ loginForm().submitting() ? i18n.t('login.submitting') : i18n.t('login.submit') }}
+          </button>
+        </div>
+      </form>
+
+      <!-- Chỉ hiện trên màn hẹp (overlay bị ẩn ở đó nên cần cách khác để chuyển form) —
+           desktop đã có nút chuyển ngay trên overlay, không cần lặp lại. -->
+      <div class="id-secondary-action auth-mobile-switch">
+        <span>{{ i18n.t('login.noAccount') }}</span>
+        <button matButton type="button" (click)="switchMode('register')">{{ i18n.t('login.createAccount') }}</button>
+      </div>
+    </div>
+
+    <!-- FORM ĐĂNG KÝ — nửa phải -->
+    <div class="auth-panel auth-panel-signup" [attr.inert]="mode() !== 'register' ? '' : null">
+      <h1 class="auth-panel-title">{{ i18n.t('register.title') }}</h1>
+      <p class="auth-panel-subtitle">{{ i18n.t('register.subtitle') }}</p>
+
+      <form class="auth-form" [formRoot]="registerForm">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ i18n.t('common.username') }}</mat-label>
+          <input
+            matInput
+            type="text"
+            autocomplete="username"
+            [formField]="registerForm.username"
+            (animationstart)="onRegisterAutofill($event, 'username')"
+          />
+          @if (registerForm.username().errors(); as errors) {
+            <mat-error>{{ errors[0]?.message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ i18n.t('common.email') }}</mat-label>
+          <input
+            matInput
+            type="email"
+            autocomplete="email"
+            [formField]="registerForm.email"
+            (animationstart)="onRegisterAutofill($event, 'email')"
+          />
+          @if (registerForm.email().errors(); as errors) {
+            <mat-error>{{ errors[0]?.message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ i18n.t('register.nameLabel') }}</mat-label>
+          <input
+            matInput
+            type="text"
+            autocomplete="name"
+            [formField]="registerForm.name"
+            (animationstart)="onRegisterAutofill($event, 'name')"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ i18n.t('common.password') }}</mat-label>
+          <input
+            matInput
+            type="password"
+            autocomplete="new-password"
+            [formField]="registerForm.password"
+            (animationstart)="onRegisterAutofill($event, 'password')"
+          />
+          @if (registerForm.password().errors(); as errors) {
+            <mat-error>{{ errors[0]?.message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ i18n.t('register.confirmPasswordLabel') }}</mat-label>
+          <input
+            matInput
+            type="password"
+            autocomplete="new-password"
+            [formField]="registerForm.confirmPassword"
+            (animationstart)="onRegisterAutofill($event, 'confirmPassword')"
+          />
+          @if (registerForm.confirmPassword().errors(); as errors) {
+            <mat-error>{{ errors[0]?.message }}</mat-error>
+          }
+        </mat-form-field>
+
+        @if (registerErrorMessage(); as message) {
+          <p class="id-error">{{ message }}</p>
+        }
+
+        <div class="id-actions">
+          <button matButton="filled" type="submit" class="id-btn-pill" [disabled]="registerForm().submitting()">
+            {{ registerForm().submitting() ? i18n.t('register.submitting') : i18n.t('register.submit') }}
+          </button>
+        </div>
+      </form>
+
+      <div class="id-secondary-action auth-mobile-switch">
+        <span>{{ i18n.t('register.hasAccount') }}</span>
+        <button matButton type="button" (click)="switchMode('login')">{{ i18n.t('common.login') }}</button>
+      </div>
+    </div>
+
+    <!-- OVERLAY THƯƠNG HIỆU — trượt + nghiêng nhẹ 3D qua lại giữa 2 nửa -->
+    <div
+      class="auth-overlay"
+      [class.overlay-settled-left]="mode() === 'register' && !turning()"
+      [class.turning-left]="turning() === 'left'"
+      [class.turning-right]="turning() === 'right'"
+      (animationend)="onOverlayAnimationEnd()"
+    >
+      <span class="auth-overlay-badge">
+        <img src="logo-removebg-preview.png" alt="Logo" class="auth-overlay-badge-img" />
+      </span>
+
+      @if (mode() === 'login') {
+        <h2 class="auth-overlay-title">{{ i18n.t('login.overlayNewTitle') }}</h2>
+        <p class="auth-overlay-desc">{{ i18n.t('login.overlayNewDesc') }}</p>
+        <button matButton="filled" type="button" class="auth-overlay-btn" (click)="switchMode('register')">
+          {{ i18n.t('login.createAccount') }}
+        </button>
+      } @else {
+        <h2 class="auth-overlay-title">{{ i18n.t('register.overlayBackTitle') }}</h2>
+        <p class="auth-overlay-desc">{{ i18n.t('register.overlayBackDesc') }}</p>
+        <button matButton="filled" type="button" class="auth-overlay-btn" (click)="switchMode('login')">
+          {{ i18n.t('common.login') }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <app-auth-footer></app-auth-footer>
+</div>

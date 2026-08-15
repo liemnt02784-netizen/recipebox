@@ -1,0 +1,86 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4px 8px 0;
+}
+
+.icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--mat-sys-error-container);
+  margin-bottom: 16px;
+}
+
+.icon-badge mat-icon {
+  color: var(--mat-sys-on-error-container);
+  width: 26px;
+  height: 26px;
+  font-size: 26px;
+}
+
+h2[mat-dialog-title] {
+  margin: 0 0 12px;
+  /* Sans-serif thay vì Georgia — Georgia vỡ dấu tổ hợp tiếng Việt (ồ, ề...) trên nhiều máy. */
+  font-family: var(--mat-sys-body-medium-font, Roboto, sans-serif);
+  font-size: 22px;
+  /* M3 heading: Medium (500), không dùng bold 700. */
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+}
+
+.message {
+  max-height: none;
+  overflow: visible;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.message p {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.item-chip {
+  margin-top: 14px;
+  padding: 8px 18px;
+  max-width: 100%;
+  border-radius: 999px;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  font-size: 15px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Google/M3 chuẩn: nút hành động căn phải, rộng theo nội dung — không chia đều 50/50
+   kiểu action-sheet mobile. */
+mat-dialog-actions {
+  width: 100%;
+  margin-top: 24px;
+  padding: 0 !important;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Nút "Hủy" (text-button) dán sát mép trước — thêm đệm phải để không nhìn như bị dồn cứng
+   vào nút filled bên cạnh. */
+mat-dialog-actions button:first-child {
+  margin-right: 4px;
+}
+
+.confirm-btn {
+  --mdc-filled-button-container-color: var(--mat-sys-error);
+  --mdc-filled-button-label-text-color: var(--mat-sys-on-error);
+}

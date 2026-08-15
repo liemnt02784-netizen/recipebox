@@ -1,0 +1,72 @@
+<div class="page">
+<a matButton class="back-link" routerLink="/recipes"><span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 4px;">arrow_back</span>{{ i18n.t('detail.back') }}</a>
+@if (selectedRecipe(); as recipe) {
+  <mat-card class="recipe-card">
+    <div class="recipe-image-wrap">
+      <img class="recipe-image" [src]="recipe.imgUrl" [alt]="'Ảnh của ' + recipe.name" />
+    </div>
+
+    <mat-card-content class="recipe-body">
+      <div class="recipe-heading">
+        <h2 class="recipe-title">{{ recipe.name }}</h2>
+        <p class="recipe-description">{{ recipe.description }}</p>
+        <p class="recipe-author">{{ i18n.t('detail.author') }} {{ recipe.authorEmail }}</p>
+      </div>
+
+      <div class="portion-control">
+        <button matIconButton (click)="giamSoPhanAn()" [attr.aria-label]="i18n.t('detail.decreasePortion')" [disabled]="soPhanAn() <= 1" type="button">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <p class="portion-count">{{ soPhanAn() }} {{ i18n.t('detail.portionSuffix') }}</p>
+        <button matIconButton (click)="tangSoPhanAn()" [attr.aria-label]="i18n.t('detail.increasePortion')" type="button">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+
+      @if (!authStore.isAdmin()) {
+        <button
+          matButton="filled"
+          class="place-order-btn"
+          type="button"
+          [disabled]="placingOrder()"
+          (click)="datMon($event)"
+        >
+          @if (placingOrder()) {
+            <ng-container>
+              <mat-progress-spinner diameter="20" mode="indeterminate" class="place-order-spinner" />
+              {{ i18n.t('detail.placingOrder') }}
+            </ng-container>
+          } @else {
+            <ng-container>
+              <mat-icon>shopping_cart</mat-icon>{{ i18n.t('detail.placeOrder') }}
+            </ng-container>
+          }
+        </button>
+      }
+
+      <div class="ingredients">
+        <h3 class="ingredients-title">{{ i18n.t('detail.ingredients') }}</h3>
+        @defer (on viewport) {
+          <mat-list class="ingredients-list">
+            @for (ingredient of adjustedIngredients(); track ingredient.name) {
+              <mat-list-item class="ingredient-item">
+                <span class="ingredient-name" matListItemTitle>{{ ingredient.name }}</span>
+                @if (ingredient.quantity != null) {
+                  <span class="ingredient-amount" matListItemMeta>{{ ingredient.quantity }} {{ ingredient.unit }}</span>
+                } @else {
+                  <span class="ingredient-amount" matListItemMeta>{{ ingredient.measure }}</span>
+                }
+              </mat-list-item>
+            }
+          </mat-list>
+        } @placeholder {
+          <p>{{ i18n.t('detail.loadingIngredients') }}</p>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <p class="not-found">{{ i18n.t('detail.notFound') }}</p>
+}
+
+</div>

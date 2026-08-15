@@ -1,0 +1,219 @@
+.page {
+  max-width: 680px;   /* tăng từ 480px để card dài ra */
+  width: 100%;
+  margin: 0 auto;
+  padding: 12px 16px 24px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+/* FE-08: từ tablet lớn trở lên, đây là trang browse chính của app — không có lý do gì
+   để mãi mãi hiển thị 1 cột dọc như mobile. Chuyển sang lưới nhiều cột, card đổi hướng
+   ảnh-trên/chữ-dưới để tận dụng chiều rộng thay vì chỉ kéo giãn margin 2 bên. */
+@media (min-width: 1024px) {
+  .page {
+    max-width: 1160px;
+  }
+}
+
+.search-field {
+  width: 100%;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  /* M3 search bar: pill shape, không viền cứng — nền be nhạt, chỉ nổi viền Primary khi focus. */
+  --mdc-outlined-text-field-container-shape: 28px;
+  --mdc-outlined-text-field-outline-width: 0;
+  --mdc-outlined-text-field-focus-outline-width: 2px;
+  --mdc-outlined-text-field-focus-outline-color: var(--mat-sys-primary);
+  --mdc-outlined-text-field-container-color: var(--mat-sys-surface-container-high);
+}
+
+.search-field .mat-mdc-text-field-wrapper {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.refresh-btn {
+  width: 100%;
+  height: 50px;
+  border-radius: 25px;
+  margin-top: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+.recipe-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 1024px) {
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Tablet: 2 cột — điểm giữa chưa từng được xử lý riêng trước đây. */
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+.recipe-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.15s ease;
+}
+
+.recipe-card-link:hover {
+  transform: translateY(-2px);
+}
+
+.recipe-card-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 14px;              /* tăng nhẹ padding cho cân đối card lớn hơn */
+  gap: 16px;                  /* tăng khoảng cách ảnh - text */
+  background: var(--mat-sys-surface-container-lowest);
+  height: 100%;
+  box-sizing: border-box;
+  /* M3 elevation 1 mặc định, elevation 2 khi hover (xem .recipe-card-link:hover). */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.15s ease;
+}
+
+.recipe-card-link:hover .recipe-card-item {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+.recipe-thumb {
+  width: 110px;                /* tăng từ 88px */
+  height: 110px;                /* tăng từ 88px */
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+  border-radius: 12px;
+}
+
+.recipe-card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding: 0 !important;
+  font-size: 17px;             /* tăng nhẹ font theo card lớn hơn */
+  font-weight: 600;
+  min-width: 0;
+}
+
+.recipe-card-name {
+  color: var(--mat-sys-on-surface);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  /* Ở dạng lưới, card đổi hướng dọc — ảnh full-width phía trên, tên món phía dưới —
+     thay vì layout hàng ngang chỉ hợp với danh sách 1 cột. */
+  .recipe-card-item {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 0 14px;
+    gap: 12px;
+  }
+
+  .recipe-thumb {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .recipe-card-body {
+    padding: 0 14px !important;
+  }
+
+  .recipe-card-name {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+.recipe-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.recipe-card-actions button {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.recipe-card-actions button:hover mat-icon {
+  color: var(--mat-sys-primary);
+}
+
+.recipe-card-actions button:last-child:hover mat-icon {
+  color: var(--mat-sys-error);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  /* M3 icon size trong card: 24px. */
+  font-size: 24px;
+}
+
+/* Đồng bộ tông Primary nâu đỏ của hệ thống, không dùng màu cam riêng lẻ. */
+.favorite-star {
+  color: var(--mat-sys-primary);
+}
+
+.skeleton-line {
+  display: block;
+  width: 70%;
+  height: 17px;
+  border-radius: 6px;
+}
+
+.recipe-skeleton .recipe-thumb {
+  border-radius: 12px;
+}
+
+@media (min-width: 640px) {
+  .recipe-skeleton .recipe-thumb {
+    border-radius: 16px 16px 0 0;
+  }
+}
+
+.empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+  padding: 20px;
+}
+
+.add-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}

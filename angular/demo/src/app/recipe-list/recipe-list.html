@@ -1,0 +1,50 @@
+<section class="page">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>{{ i18n.t('recipes.searchLabel') }}</mat-label>
+    <input
+      matInput
+      type="search"
+      [placeholder]="i18n.t('recipes.searchPlaceholder')"
+      [ngModel]="searchInput()"
+      (ngModelChange)="onSearchChange($event)"
+    />
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+
+  <div class="recipe-grid">
+    @if (store.loading()) {
+      @for (i of [1,2,3,4,5,6,7,8]; track i) {
+        <div class="recipe-card-item recipe-skeleton" aria-hidden="true">
+          <div class="recipe-thumb skeleton-block"></div>
+          <div class="recipe-card-body">
+            <span class="skeleton-block skeleton-line"></span>
+          </div>
+        </div>
+      }
+    } @else {
+    @for (recipe of visibleRecipes(); track recipe.id) {
+      <a class="recipe-card-link" [routerLink]="['/recipes', recipe.id]">
+        <mat-card class="recipe-card-item" appearance="outlined">
+          <img [src]="recipe.imgUrl" [alt]="'Ảnh của ' + recipe.name" class="recipe-thumb" />
+          <mat-card-content class="recipe-card-body">
+            <span class="recipe-card-name">{{ recipe.name }}</span>
+            <div class="recipe-card-actions">
+              @if (recipe.isFavorite) {
+                <span class="material-symbols-outlined favorite-star" [attr.aria-label]="i18n.t('recipes.favoriteAria')">
+                  award_meal
+                </span>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </a>
+    } @empty {
+      <div class="empty-state">
+        <span class="material-symbols-outlined empty-state-icon">search_off</span>
+        <p class="empty-title">{{ i18n.t('recipes.empty') }}</p>
+      </div>
+    }
+    }
+  </div>
+
+</section>

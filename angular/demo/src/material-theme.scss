@@ -1,0 +1,37 @@
+@use '@angular/material' as mat;
+@use './theme-colors' as my-theme;
+
+html {
+  height: 100%;
+  /* Chỉ set trên body trước đây — khi trình duyệt ở dark mode, CDK overlay
+     (mở popup tài khoản) bù khoảng trống scrollbar bằng cách chỉnh margin/
+     padding trên chính thẻ html, lộ ra nền tối mặc định của html (chưa bị
+     ép sáng) thành 1 vệt đen dọc sát mép phải màn hình. */
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  @include mat.theme(
+    (
+      color: (
+        primary: my-theme.$primary-palette,
+        tertiary: my-theme.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}
+:root {
+  @include mat.toolbar-overrides((
+    container-background-color: var(--mat-sys-primary-container),
+    container-text-color: var(--mat-sys-primary),
+  ));
+}

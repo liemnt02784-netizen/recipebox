@@ -1,0 +1,16 @@
+<div class="icon-badge">
+  <mat-icon>delete</mat-icon>
+</div>
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content class="message">
+  <p>{{ data.message }}</p>
+  @if (data.itemName) {
+    <div class="item-chip">{{ data.itemName }}</div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton type="button" (click)="cancel()">{{ data.cancelLabel ?? i18n.t('common.cancel') }}</button>
+  <button matButton="filled" class="confirm-btn" type="button" (click)="confirm()">
+    {{ data.confirmLabel ?? i18n.t('recipes.deleteConfirm') }}
+  </button>
+</mat-dialog-actions>

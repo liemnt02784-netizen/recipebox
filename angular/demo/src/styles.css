@@ -1,0 +1,616 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '@angular/cdk/overlay-prebuilt.css';
+@import 'tailwindcss';
+
+/* Popup xác nhận (confirm-dialog) — bo góc M3 chuẩn, không cho cuộn nội dung. */
+.confirm-dialog-panel {
+  --mat-dialog-container-max-width: 420px;
+}
+
+/*
+ * Trình duyệt autofill set value bằng cách không chuẩn (không bắn event 'input' như gõ tay), nên
+ * binding [formField] của Angular signal-forms không nhận được giá trị — ô nhìn có chữ (thường
+ * tô vàng) nhưng model bên trong vẫn rỗng, dẫn tới submit form báo lỗi dù đã điền (autofill bug
+ * kinh điển của mọi framework SPA). Mẹo bắt buộc: Chrome tự áp animation rỗng lên input khi
+ * autofill kích hoạt — các trang auth (login/register/forgot/reset) lắng (animationstart) và
+ * đồng bộ lại giá trị thật vào signal, xem angular/demo/src/app/autofill-sync.ts.
+ */
+@keyframes onAutoFillStart {
+  from {}
+  to {}
+}
+
+input:-webkit-autofill {
+  animation-name: onAutoFillStart;
+}
+
+/* .mdc-button__label do Material tự sinh (không thuộc template của component nào cụ thể) — CSS
+   scoped trong component không chạm tới được do view encapsulation, phải đặt ở đây (global) mới
+   áp được. Sửa bug icon dính sát chữ trên nút "Đặt món" ("🛒Đặt món" không có khoảng cách). */
+.place-order-btn .mdc-button__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   Chuẩn hoá size icon Material Symbols toàn site:
+   20px trong input/button nhỏ, 24px mặc định (card...), 28px trên header.
+   ============================================================ */
+.mat-mdc-form-field-icon-prefix > .mat-icon,
+.mat-mdc-form-field-icon-suffix > .mat-icon,
+[matIconButton] .mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================================================
+   Hiệu ứng "bay vào giỏ" khi Đặt món — xem fly-to-target.ts.
+   Element được append thẳng vào <body> (không nằm trong component nào)
+   nên style phải đặt ở global stylesheet, không phải CSS scoped.
+   ============================================================ */
+.fly-to-target-icon {
+  position: fixed;
+  z-index: 2000;
+  width: 34px;
+  height: 34px;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--mat-sys-primary);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.fly-target-bump {
+  animation: fly-target-bump-pulse 0.4s ease;
+}
+
+@keyframes fly-target-bump-pulse {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fly-target-bump {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Trạng thái rỗng (empty state) dùng chung: icon + tiêu đề + CTA tuỳ chọn —
+   thay cho 1 dòng chữ xám đơn độc giữa màn hình trắng.
+   ============================================================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  padding: 48px 20px;
+  grid-column: 1 / -1;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: var(--mat-sys-outline);
+  margin-bottom: 6px;
+}
+
+.empty-state .empty-title {
+  padding: 0;
+}
+
+.empty-state-cta {
+  margin-top: 10px;
+}
+
+/* ============================================================
+   Skeleton loading — Nhóm 1 (feedback trạng thái). Thay cho màn trắng/
+   trạng thái "không có gì" chớp qua trong lúc chờ API — báo ngay cho
+   người dùng biết "đang có việc xảy ra" (Nielsen heuristic #1).
+   ============================================================ */
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-block {
+  background: linear-gradient(
+    100deg,
+    var(--mat-sys-surface-container) 30%,
+    var(--mat-sys-surface-container-high) 50%,
+    var(--mat-sys-surface-container) 70%
+  );
+  background-size: 300% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Snackbar success/error — Nhóm 1 (feedback trạng thái). Phân biệt được
+   ngay bằng màu sắc + icon, không cần đọc hết câu chữ mới biết kết quả
+   thao tác (Nielsen heuristic #1 — Visibility of System Status).
+   ============================================================ */
+.app-snackbar .mdc-snackbar__surface {
+  display: flex;
+  align-items: center;
+  border-radius: 12px !important;
+  padding-left: 4px !important;
+}
+
+.app-snackbar .mdc-snackbar__label::before {
+  font-family: 'Material Symbols Outlined';
+  font-size: 20px;
+  line-height: 1;
+  vertical-align: -4px;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.app-snackbar-success .mdc-snackbar__surface {
+  background: #1f4d3a !important;
+  border-left: 4px solid #4caf6f;
+}
+
+.app-snackbar-success .mdc-snackbar__label::before {
+  content: 'check_circle';
+  color: #6fe0a0;
+}
+
+.app-snackbar-error .mdc-snackbar__surface {
+  background: #4d2222 !important;
+  border-left: 4px solid #e0574f;
+}
+
+.app-snackbar-error .mdc-snackbar__label::before {
+  content: 'error';
+  color: #ff8a80;
+}
+
+.confirm-dialog-panel .mdc-dialog__surface {
+  border-radius: 28px;
+  padding: 32px 28px 24px;
+  box-shadow: 0 16px 40px rgba(60, 45, 30, 0.2);
+}
+
+.confirm-dialog-panel .mat-mdc-dialog-content {
+  max-height: none;
+  overflow: visible;
+}
+
+/* ============================================================
+   Popup tài khoản (avatar dropdown ở header) — kiểu Google Account,
+   màu thương hiệu riêng của web thay vì xanh dương Google.
+   Bo góc + màu nền của panel PHẢI dùng token --mat-menu-container-shape/
+   -color (không phải border-radius/background thường) — mat-menu tự vẽ
+   shape qua token riêng, set nhầm property thường sẽ không bị clip đúng.
+   ============================================================ */
+.account-popup.mat-mdc-menu-panel {
+  --mat-menu-container-shape: 28px;
+  --mat-menu-container-color: #f3efe9;
+  min-width: 320px;
+  max-width: 360px;
+  max-height: 80vh;
+  margin-top: 8px;
+  box-shadow: 0 16px 44px rgba(60, 45, 30, 0.28);
+  overflow: hidden;
+}
+
+.account-popup .mat-mdc-menu-content {
+  padding: 0;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.account-popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px 16px;
+  box-sizing: border-box;
+}
+
+.account-popup-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 32px 12px;
+  box-sizing: border-box;
+}
+
+.account-popup-email {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-popup-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.account-popup-close:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Card trắng — bo góc nhỏ hơn panel ngoài (16px so với 28px), tạo phân lớp rõ. */
+.account-popup-profile-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 16px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(60, 45, 30, 0.08);
+}
+
+.account-popup-avatar-big {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--mat-sys-on-primary);
+  background: var(--mat-sys-primary);
+  flex-shrink: 0;
+}
+
+.account-popup-greeting {
+  margin: 12px 0 8px;
+  font: var(--mat-sys-title-medium);
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+  text-align: center;
+}
+
+.account-popup-manage-btn {
+  margin-top: 16px;
+  width: 100%;
+  border-radius: 999px !important;
+  box-sizing: border-box;
+}
+
+.account-popup-logout-btn {
+  width: 100%;
+  border-radius: 999px;
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: var(--mat-sys-error);
+  font: var(--mat-sys-label-large);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.account-popup-logout-btn:hover {
+  background: color-mix(in srgb, var(--mat-sys-error) 8%, transparent);
+}
+
+/* ============================================================
+   Trang nội dung tĩnh (Trợ giúp / Quyền riêng tư / Điều khoản)
+   ============================================================ */
+.content-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px 20px 64px;
+}
+
+.content-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.content-title {
+  /* Dùng chung font sans-serif (Roboto qua mat.theme) với toàn bộ phần còn lại
+     của app — font serif (Georgia) render dấu tiếng Việt không đều trên nhiều
+     máy, gây vỡ chữ. */
+  font-family: var(--mat-sys-body-medium-font, Roboto, sans-serif);
+  /* M3 heading: Medium (500), không dùng bold 700/600. */
+  font-weight: 500;
+  font-size: 32px;
+  margin: 8px 0 28px;
+  color: var(--mat-sys-on-surface);
+}
+
+.content-section {
+  margin-bottom: 26px;
+}
+
+.content-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--mat-sys-on-surface);
+}
+
+.content-section p {
+  margin: 0 0 8px;
+  line-height: 1.65;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.content-section ul {
+  /* Tailwind Preflight (được import global) reset list-style về none —
+     phải khai báo tường minh lại thì bullet mới hiện ra. */
+  list-style: disc;
+  margin: 0 0 8px;
+  padding-left: 20px;
+  color: var(--mat-sys-on-surface-variant);
+  line-height: 1.65;
+}
+
+.content-section ul li {
+  margin-bottom: 4px;
+}
+
+/* ============================================================
+   Auth split-card — dùng chung cho Login/Register/Forgot/Reset.
+   Dùng thẳng theme sáng + màu thương hiệu (nâu terracotta) đang
+   áp cho cả app qua mat.theme() ở material-theme.scss — không tự
+   ý đổi sang theme tối, để trang auth liền mạch với phần còn lại.
+   ============================================================ */
+.id-shell {
+  min-height: 100vh; /* thay vì 100% — không phụ thuộc chuỗi height của các ancestor,
+                         tránh hở đáy lộ màu nền khác của body phía dưới card */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #fdfbf9;
+}
+
+.id-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  width: 100%;
+  max-width: 880px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 28px;
+  box-shadow: 0 16px 40px rgba(60, 45, 30, 0.1);
+  overflow: hidden;
+  color: var(--mat-sys-on-surface);
+}
+
+.id-left {
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fffbf8;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Logo là ảnh line-art tông xám/đen — dùng nền sáng phía sau để nổi rõ. */
+.id-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fffbf8;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.id-brand-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.id-title {
+  font-family: var(--mat-sys-body-medium-font, Roboto, sans-serif);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.3;
+  margin: 8px 0 0;
+  color: var(--mat-sys-on-surface);
+}
+
+.id-subtitle {
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+}
+
+.id-right {
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #ffffff;
+  /* Bo góc input đồng bộ với card ngoài (28px), thay vì góc vuông mặc định của MDC. */
+  --mat-form-field-outlined-container-shape: 16px;
+}
+
+.id-link {
+  align-self: flex-start;
+  font: var(--mat-sys-label-large);
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+}
+.id-link:hover {
+  text-decoration: underline;
+}
+
+.id-hint {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+  margin: 4px 0 0;
+}
+.id-hint a {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+}
+.id-hint a:hover {
+  text-decoration: underline;
+}
+
+.id-success {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-tertiary);
+  margin: 0;
+}
+
+.id-error {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-error);
+  margin: 0;
+}
+
+.id-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+/* Link điều hướng phụ (Tạo tài khoản/Đăng nhập/Hủy) — cố tình đặt NGOÀI <form>
+   để click vào không bao giờ có thể kích hoạt validate của form chính. */
+.id-secondary-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* Nút chính dạng pill — màu nền/chữ giữ nguyên mặc định (đã là màu
+   primary của thương hiệu qua mat.theme()), chỉ bo tròn thêm. */
+.id-btn-pill {
+  border-radius: 999px !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  --mat-button-filled-container-shape: 999px;
+}
+
+/* Nút phụ dạng "Hủy" — cố tình mờ hơn màu primary để không cạnh tranh với nút chính. */
+.id-btn-muted {
+  --mat-button-text-label-text-color: var(--mat-sys-on-surface-variant);
+  --mat-button-text-state-layer-color: var(--mat-sys-on-surface-variant);
+}
+
+/* <app-auth-footer> không có display/width riêng nên mặc định co theo nội dung (fit-content)
+   khi làm flex item của .id-shell (align-items: center) — khiến .id-footer bên trong tính
+   width:100% theo khung đã bị co nhỏ đó thay vì theo chiều rộng thật của trang. Ép nó lấp đầy
+   trục ngang trước, rồi .id-footer mới canh space-between đúng trên toàn bộ chiều rộng. */
+app-auth-footer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.id-footer {
+  width: 100%;
+  max-width: 880px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 8px;
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.85;
+  flex-wrap: wrap;
+}
+
+.id-lang-select {
+  background: transparent;
+  color: var(--mat-sys-on-surface-variant);
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+}
+.id-lang-select:focus {
+  outline: none;
+  color: var(--mat-sys-on-surface);
+}
+
+.id-legal-links {
+  display: flex;
+  gap: 24px;
+}
+.id-legal-links a {
+  color: var(--mat-sys-on-surface-variant);
+  text-decoration: none;
+}
+.id-legal-links a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .id-card {
+    grid-template-columns: 1fr;
+  }
+  .id-left {
+    border-right: none;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    padding: 32px 24px;
+  }
+  .id-right {
+    padding: 32px 24px;
+  }
+  /* Màn hẹp: xếp 2 hàng riêng (ngôn ngữ / điều khoản) thay vì dồn chung 1 cục giữa màn hình —
+     giống footer trang đăng nhập Google, KHÔNG phải trộn lẫn cả 2 nhóm vào cùng 1 hàng. */
+  .id-footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .id-legal-links {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}

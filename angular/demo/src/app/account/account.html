@@ -1,0 +1,198 @@
+<div class="content-page">
+  <a matButton class="content-back" routerLink="/recipes">
+    <mat-icon>arrow_back</mat-icon>
+    {{ i18n.t('content.back') }}
+  </a>
+
+  <h1 class="content-title">{{ i18n.t('account.pageTitle') }}</h1>
+
+  @if (loadError(); as message) {
+    <p class="id-error">{{ message }}</p>
+  } @else if (account(); as user) {
+    <!-- THẺ HỒ SƠ -->
+    <section class="account-card">
+      <h2 class="account-card-title">{{ i18n.t('account.profileSectionTitle') }}</h2>
+
+      <form [formRoot]="profileForm">
+        <div class="avatar-row">
+          <button
+            type="button"
+            class="avatar-preview"
+            (click)="avatarInput.click()"
+            [attr.aria-label]="i18n.t('account.changeAvatar')"
+          >
+            @if (profileModel().avatarUrl) {
+              <img [src]="profileModel().avatarUrl" alt="Avatar" class="avatar-img" />
+            } @else {
+              <span class="avatar-fallback">{{ avatarInitial() }}</span>
+            }
+            <span class="avatar-overlay">
+              <mat-icon>photo_camera</mat-icon>
+            </span>
+          </button>
+          <div class="avatar-actions">
+            <button matButton="outlined" type="button" (click)="avatarInput.click()">
+              <mat-icon>upload</mat-icon>{{ i18n.t('account.changeAvatar') }}
+            </button>
+            <input #avatarInput type="file" accept="image/jpeg,image/png,image/webp" class="visually-hidden-file-input" (change)="onFileSelected($event)" />
+            @if (uploadError(); as msg) {
+              <p class="image-error">{{ msg }}</p>
+            }
+          </div>
+        </div>
+
+        <div class="account-info-row">
+          <div class="account-info-item">
+            <span class="account-info-label">{{ i18n.t('common.username') }}</span>
+            <span class="readonly-value">{{ user.username }}</span>
+          </div>
+          <div class="account-info-item">
+            <span class="account-info-label">{{ i18n.t('account.role') }}</span>
+            <span class="readonly-value">{{ user.role === 'admin' ? i18n.t('role.admin') : i18n.t('role.user') }}</span>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ i18n.t('account.name') }}</mat-label>
+          <input matInput type="text" [formField]="profileForm.name" />
+          @if (profileForm.name().errors(); as errors) {
+            <mat-error>{{ errors[0]?.message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ i18n.t('common.email') }}</mat-label>
+          <input matInput type="email" [formField]="profileForm.email" />
+          @if (profileForm.email().errors(); as errors) {
+            <mat-error>{{ errors[0]?.message }}</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="verify-row">
+          @if (user.isEmailVerified) {
+            <span class="verify-badge verify-badge-ok">
+              <mat-icon>check_circle</mat-icon>{{ i18n.t('account.emailVerified') }}
+            </span>
+          } @else {
+            <span class="verify-badge verify-badge-warn">
+              <mat-icon>error</mat-icon>{{ i18n.t('account.emailNotVerified') }}
+            </span>
+            <button matButton type="button" [disabled]="resendingVerification()" (click)="resendVerification()">
+              {{ resendingVerification() ? i18n.t('account.sending') : i18n.t('account.resendVerification') }}
+            </button>
+          }
+        </div>
+
+        <button matButton="filled" type="submit" class="save-btn" [disabled]="savingProfile()">
+          {{ savingProfile() ? i18n.t('account.saving') : i18n.t('account.save') }}
+        </button>
+      </form>
+    </section>
+
+    <!-- THẺ BẢO MẬT — thu gọn mặc định, bấm mới xổ 3 ô mật khẩu (kiểu Google Account) -->
+    <section class="account-card">
+      <h2 class="account-card-title">{{ i18n.t('account.securitySectionTitle') }}</h2>
+
+      <button
+        type="button"
+        class="section-toggle-row"
+        [class.section-toggle-row-open]="passwordSectionOpen()"
+        (click)="togglePasswordSection()"
+      >
+        <span class="section-toggle-icon"><mat-icon>lock</mat-icon></span>
+        <span class="section-toggle-text">
+          <span class="section-toggle-main">{{ i18n.t('account.newPasswordLabel') }}</span>
+          <span class="section-toggle-sub">••••••••</span>
+        </span>
+        <mat-icon class="section-toggle-chevron" [class.section-toggle-chevron-open]="passwordSectionOpen()">expand_more</mat-icon>
+      </button>
+
+      <div class="collapsible" [class.collapsible-open]="passwordSectionOpen()">
+        <form class="collapsible-inner" [formRoot]="passwordForm">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ i18n.t('account.currentPasswordLabel') }}</mat-label>
+            <input
+              matInput
+              [type]="showPassword() ? 'text' : 'password'"
+              autocomplete="current-password"
+              [formField]="passwordForm.currentPassword"
+            />
+            @if (passwordForm.currentPassword().errors(); as errors) {
+              <mat-error>{{ errors[0]?.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>{{ i18n.t('account.newPasswordLabelShort') }}</mat-label>
+            <input
+              matInput
+              [type]="showPassword() ? 'text' : 'password'"
+              autocomplete="new-password"
+              [formField]="passwordForm.password"
+            />
+            <button
+              matIconButton
+              matSuffix
+              type="button"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword() ? i18n.t('account.hidePassword') : i18n.t('account.showPassword')"
+            >
+              <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (passwordForm.password().errors(); as errors) {
+              <mat-error>{{ errors[0]?.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>{{ i18n.t('account.confirmPasswordLabel') }}</mat-label>
+            <input
+              matInput
+              [type]="showPassword() ? 'text' : 'password'"
+              autocomplete="new-password"
+              [formField]="passwordForm.confirmPassword"
+            />
+            @if (passwordForm.confirmPassword().errors(); as errors) {
+              <mat-error>{{ errors[0]?.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="collapsible-actions">
+            <button matButton type="button" (click)="togglePasswordSection()">{{ i18n.t('common.cancel') }}</button>
+            <button matButton="filled" type="submit" [disabled]="savingPassword()">
+              {{ savingPassword() ? i18n.t('account.saving') : i18n.t('account.changePassword') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- VÙNG NGUY HIỂM — thu gọn mặc định, giống danger zone Google Account. -->
+    <section class="account-card danger-zone">
+      <button
+        type="button"
+        class="section-toggle-row"
+        [class.section-toggle-row-open]="dangerZoneOpen()"
+        (click)="dangerZoneOpen.set(!dangerZoneOpen())"
+      >
+        <span class="section-toggle-icon section-toggle-icon-danger"><mat-icon>warning</mat-icon></span>
+        <span class="section-toggle-text">
+          <span class="section-toggle-main danger-title">{{ i18n.t('account.dangerZoneTitle') }}</span>
+          <span class="section-toggle-sub">{{ i18n.t('account.dangerZoneHint') }}</span>
+        </span>
+        <mat-icon class="section-toggle-chevron" [class.section-toggle-chevron-open]="dangerZoneOpen()">expand_more</mat-icon>
+      </button>
+
+      <div class="collapsible" [class.collapsible-open]="dangerZoneOpen()">
+        <div class="collapsible-inner">
+          <p class="danger-desc">{{ i18n.t('account.dangerZoneDesc') }}</p>
+          <button matButton="outlined" type="button" class="delete-btn" [disabled]="deleting()" (click)="confirmDeleteAccount()">
+            <mat-icon>delete_forever</mat-icon>{{ deleting() ? i18n.t('account.deleting') : i18n.t('account.deleteAccount') }}
+          </button>
+        </div>
+      </div>
+    </section>
+  } @else {
+    <p class="loading-text">{{ i18n.t('account.loading') }}</p>
+  }
+</div>

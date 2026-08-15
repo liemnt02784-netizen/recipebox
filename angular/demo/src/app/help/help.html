@@ -1,0 +1,44 @@
+<div class="content-page">
+  <a matButton class="content-back" routerLink="/recipes">
+    <mat-icon>arrow_back</mat-icon>
+    {{ i18n.t('content.back') }}
+  </a>
+
+  <h1 class="content-title">{{ i18n.t('help.pageTitle') }}</h1>
+
+  @if (i18n.locale() === 'vi') {
+    <div class="content-section">
+      <h2>Làm sao để tạo tài khoản?</h2>
+      <p>Vào trang Đăng nhập, bấm "Tạo tài khoản", điền Username, Email và Mật khẩu (tối thiểu 6 ký tự). Sau khi đăng ký, bạn được đăng nhập luôn.</p>
+    </div>
+    <div class="content-section">
+      <h2>Tôi quên mật khẩu thì làm sao?</h2>
+      <p>Ở trang Đăng nhập, bấm "Quên mật khẩu?", nhập email đã đăng ký. Một link đặt lại mật khẩu (có hiệu lực 15 phút) sẽ được gửi vào email đó — mở link rồi nhập mật khẩu mới.</p>
+    </div>
+    <div class="content-section">
+      <h2>Vì sao tôi không thêm/sửa/xóa được công thức?</h2>
+      <p>Tài khoản thường được xem tất cả công thức và thêm công thức mới, nhưng chỉ tài khoản <strong>admin</strong> mới được sửa/xóa công thức của người khác — đây là quy tắc phân quyền của hệ thống, không phải lỗi.</p>
+    </div>
+    <div class="content-section">
+      <h2>Ảnh món ăn có bắt buộc không?</h2>
+      <p>Có. Khi thêm công thức, bạn phải chọn 1 trong 2 cách: tải ảnh lên (tối đa 5MB, định dạng JPG/PNG/WEBP) hoặc dán link ảnh trực tiếp.</p>
+    </div>
+  } @else {
+    <div class="content-section">
+      <h2>How do I create an account?</h2>
+      <p>Go to the Login page and click "Create account". Fill in your Username, Email, and Password (at least 6 characters). You'll be logged in automatically after signing up.</p>
+    </div>
+    <div class="content-section">
+      <h2>I forgot my password, what do I do?</h2>
+      <p>On the Login page, click "Forgot password?" and enter your registered email. A reset link (valid for 15 minutes) will be sent to that email — open it and set a new password.</p>
+    </div>
+    <div class="content-section">
+      <h2>Why can't I edit/delete a recipe?</h2>
+      <p>Regular accounts can view all recipes and add new ones, but only <strong>admin</strong> accounts can edit or delete recipes — this is an intentional permission rule, not a bug.</p>
+    </div>
+    <div class="content-section">
+      <h2>Is a recipe photo required?</h2>
+      <p>Yes. When adding a recipe, you must either upload a photo (max 5MB, JPG/PNG/WEBP) or paste an image link.</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,53 @@
+<section class="page">
+  <h1 class="page-title">{{ i18n.t('adminDashboard.pageTitle') }}</h1>
+
+  @if (store.stats(); as stats) {
+    <mat-card class="stat-card" appearance="outlined">
+      <div class="total-row">
+        <span class="total-number">{{ stats.totalOrders }}</span>
+        <span class="total-label">{{ i18n.t('adminDashboard.totalOrders') }}</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="chart-card" appearance="outlined">
+      <h2 class="chart-title">{{ i18n.t('adminDashboard.byStatusTitle') }}</h2>
+      <div class="bar-chart">
+        @for (status of statusOrder; track status; let i = $index) {
+          <div class="bar-column">
+            <span class="bar-value">{{ statusCount(status) }}</span>
+            <div
+              class="bar"
+              [class]="'status-' + status"
+              [style.height.%]="barHeightPercent(status)"
+              [style.transition-delay.ms]="i * 70"
+            ></div>
+            <span class="bar-label">{{ statusLabel(status) }}</span>
+          </div>
+        }
+      </div>
+    </mat-card>
+
+    <mat-card class="chart-card" appearance="outlined">
+      <h2 class="chart-title">{{ i18n.t('adminDashboard.topRecipesTitle') }}</h2>
+      @if (stats.topRecipes.length > 0) {
+        <div class="hbar-list">
+          @for (item of stats.topRecipes; track item.recipe?.id ?? $index; let i = $index) {
+            <div class="hbar-row">
+              <span class="hbar-label">{{ item.recipe?.name ?? '—' }}</span>
+              <div class="hbar-track">
+                <div
+                  class="hbar-fill"
+                  [style.width.%]="recipeBarPercent(item.totalOrders)"
+                  [style.transition-delay.ms]="i * 70"
+                ></div>
+              </div>
+              <span class="hbar-value">{{ item.totalOrders }}</span>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="empty-title">{{ i18n.t('adminDashboard.noData') }}</p>
+      }
+    </mat-card>
+  }
+</section>

@@ -1,0 +1,187 @@
+<div class="page">
+  <h2>{{ pageTitle() }}</h2>
+
+  <form class="recipe-form" [formRoot]="recipeForm">
+
+    <!-- TÊN MÓN -->
+    <mat-form-field appearance="outline">
+      <mat-label>{{ i18n.t('addRecipe.nameLabel') }}</mat-label>
+      <input matInput type="text" [formField]="recipeForm.name" />
+      @if (recipeForm.name().errors(); as errors) {
+        <mat-error>{{ errors[0]?.message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- HÌNH ẢNH MÓN ĂN -->
+    <div class="image-section">
+      <h3 class="image-section-title">{{ i18n.t('addRecipe.imageSectionTitle') }} <span class="required-star">*</span></h3>
+
+      <mat-button-toggle-group
+        class="image-mode-toggle"
+        [value]="imageMode()"
+        (change)="imageMode.set($event.value)"
+      >
+        <mat-button-toggle value="upload">{{ i18n.t('addRecipe.uploadTab') }}</mat-button-toggle>
+        <mat-button-toggle value="link">{{ i18n.t('addRecipe.linkTab') }}</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <div class="image-grid">
+        <!-- CỘT TRÁI — nhập ảnh -->
+        <div class="image-input-col">
+          @if (imageMode() === 'upload') {
+            <div
+              class="dropzone"
+              [class.dropzone-over]="isDragOver()"
+              role="button"
+              tabindex="0"
+              (click)="fileInput.click()"
+              (keydown.enter)="fileInput.click()"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
+            >
+              <mat-icon class="dropzone-icon">upload</mat-icon>
+              <p class="dropzone-text">{{ i18n.t('addRecipe.dropzoneText') }}</p>
+              <p class="dropzone-hint">{{ i18n.t('addRecipe.dropzoneHint') }}</p>
+            </div>
+            <input
+              #fileInput
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              class="visually-hidden-file-input"
+              (change)="onFileSelected($event)"
+            />
+            @if (uploadError(); as msg) {
+              <p class="image-error">{{ msg }}</p>
+            }
+          } @else {
+            <mat-form-field appearance="outline" class="image-link-field">
+              <mat-label>{{ i18n.t('addRecipe.imageLinkLabel') }}</mat-label>
+              <input
+                matInput
+                type="url"
+                placeholder="https://..."
+                [formField]="recipeForm.imgUrl"
+                (input)="onImgUrlTyped()"
+              />
+            </mat-form-field>
+          }
+        </div>
+
+        <!-- CỘT PHẢI — preview -->
+        <div class="image-preview-col">
+          <div class="image-preview-box" [class.image-preview-empty]="!recipeModel().imgUrl">
+            @if (!recipeModel().imgUrl) {
+              <mat-icon class="preview-placeholder-icon">image</mat-icon>
+            } @else if (imageLoadError()) {
+              <div class="preview-error">
+                <mat-icon>broken_image</mat-icon>
+                <p>{{ i18n.t('addRecipe.imageBroken') }}</p>
+              </div>
+            } @else {
+              <img
+                [src]="recipeModel().imgUrl"
+                [alt]="i18n.t('addRecipe.previewAlt')"
+                class="preview-img"
+                (error)="onPreviewImgError()"
+              />
+              <button
+                type="button"
+                class="preview-clear-btn"
+                (click)="clearImage()"
+                [attr.aria-label]="i18n.t('addRecipe.clearImageAria')"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      @if (recipeForm.imgUrl().touched() && recipeForm.imgUrl().errors(); as errors) {
+        <p class="image-field-error">{{ errors[0]?.message }}</p>
+      }
+    </div>
+
+    <!-- EMAIL -->
+    <mat-form-field appearance="outline">
+      <mat-label>{{ i18n.t('addRecipe.authorEmailLabel') }}</mat-label>
+      <input matInput type="email" [formField]="recipeForm.authorEmail" />
+      <mat-hint>{{ i18n.t('addRecipe.authorEmailHint') }}</mat-hint>
+      @if (recipeForm.authorEmail().errors(); as errors) {
+        <mat-error>{{ errors[0]?.message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- MÔ TẢ -->
+    <mat-form-field appearance="outline">
+      <mat-label>{{ i18n.t('addRecipe.descriptionLabel') }}</mat-label>
+      <input matInput type="text" [formField]="recipeForm.description" />
+      @if (recipeForm.description().errors(); as errors) {
+        <mat-error>{{ errors[0]?.message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="ingredients-section">
+      <h3 class="ingredients-title">{{ i18n.t('addRecipe.ingredientsTitle') }}</h3>
+
+      <div class="ingredients-list">
+        @for (ingredient of recipeModel().ingredients; track $index; let i = $index) {
+          <div class="ingredient-row">
+
+            <!-- TÊN NGUYÊN LIỆU -->
+            <mat-form-field appearance="outline" class="ingredient-name-field">
+              <mat-label>{{ i18n.t('addRecipe.ingredientNameLabel') }}</mat-label>
+              <input matInput type="text" [formField]="recipeForm.ingredients[i].name" />
+              @if (recipeForm.ingredients[i].name().errors(); as errors) {
+                <mat-error>{{ errors[0]?.message }}</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- SỐ LƯỢNG -->
+            <mat-form-field appearance="outline" class="ingredient-qty-field">
+              <mat-label>{{ i18n.t('addRecipe.quantityLabel') }}</mat-label>
+              <input matInput type="number" [formField]="recipeForm.ingredients[i].quantity" />
+              @if (recipeForm.ingredients[i].quantity().errors(); as errors) {
+                <mat-error>{{ errors[0]?.message }}</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- ĐƠN VỊ -->
+            <mat-form-field appearance="outline" class="ingredient-unit-field">
+              <mat-label>{{ i18n.t('addRecipe.unitLabel') }}</mat-label>
+              <input matInput type="text" [formField]="recipeForm.ingredients[i].unit" />
+              @if (recipeForm.ingredients[i].unit().errors(); as errors) {
+                <mat-error>{{ errors[0]?.message }}</mat-error>
+              }
+            </mat-form-field>
+
+            <button
+              matIconButton
+              type="button"
+              (click)="removeIngredient(i)"
+              [disabled]="recipeModel().ingredients.length <= 1"
+              [attr.aria-label]="i18n.t('addRecipe.removeIngredientAria')"
+            >
+              <mat-icon>remove_circle_outline</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+
+      <button matButton type="button" (click)="addIngredient()">
+        <mat-icon>add</mat-icon>
+        {{ i18n.t('addRecipe.addIngredient') }}
+      </button>
+    </div>
+
+    <button matButton="filled" type="submit" [disabled]="recipeForm().submitting()">
+      {{ recipeForm().submitting() ? i18n.t('addRecipe.submitting') : (editingId() != null ? i18n.t('addRecipe.submitEdit') : i18n.t('addRecipe.submitNew')) }}
+    </button>
+  </form>
+
+  <a matButton class="back-link" routerLink="/admin/recipes">
+    <mat-icon>arrow_back</mat-icon>
+    {{ i18n.t('addRecipe.backLink') }}
+  </a>
+</div>

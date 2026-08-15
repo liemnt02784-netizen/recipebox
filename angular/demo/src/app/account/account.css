@@ -1,0 +1,308 @@
+/* ============================================================
+   Thẻ (card) từng nhóm — Hồ sơ / Bảo mật / Vùng nguy hiểm — tách biệt
+   rõ ràng, kiểu Google Account, thay vì 1 form dài liền mạch.
+   ============================================================ */
+.account-card {
+  background: var(--mat-sys-surface-container-lowest);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  padding: 20px 22px 24px;
+  margin-bottom: 20px;
+}
+
+.account-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-card-title {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--mat-sys-on-surface);
+}
+
+.avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.avatar-preview {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  font-size: 28px;
+  font-weight: 700;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Hover overlay kiểu Google Account: rê chuột vào avatar hiện icon máy ảnh mờ đè lên. */
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.avatar-preview:hover .avatar-overlay,
+.avatar-preview:focus-visible .avatar-overlay {
+  opacity: 1;
+}
+
+.avatar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.visually-hidden-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.image-error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--mat-sys-error);
+}
+
+.account-info-row {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.account-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.account-info-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mat-sys-outline);
+}
+
+.readonly-value {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* Badge trạng thái xác thực email — xanh khi đã verify, vàng cảnh báo khi chưa. */
+.verify-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.verify-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.verify-badge mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.verify-badge-ok {
+  background: color-mix(in srgb, #15803d 14%, transparent);
+  color: #15803d;
+}
+
+.verify-badge-warn {
+  background: color-mix(in srgb, #b45309 14%, transparent);
+  color: #b45309;
+}
+
+.save-btn {
+  align-self: flex-start;
+  margin-top: 4px;
+  /* M3 Filled Button: pill shape thay vì bo góc vuông. */
+  --mdc-filled-button-container-shape: 20px;
+}
+
+.account-card mat-form-field {
+  /* M3 Outlined TextField: bo góc 4px, viền dày 2px + đổi màu Primary khi focus. */
+  --mdc-outlined-text-field-container-shape: 4px;
+  --mdc-outlined-text-field-focus-outline-width: 2px;
+  --mdc-outlined-text-field-focus-outline-color: var(--mat-sys-primary);
+}
+
+/* ============================================================
+   Hàng bấm để xổ/thu section (đổi mật khẩu, vùng nguy hiểm) — accordion
+   kiểu Google Account: mặc định gọn 1 dòng, không phơi hết ô nhập.
+   ============================================================ */
+.section-toggle-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: none;
+  border: none;
+  padding: 10px;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 12px;
+  transition: background-color 0.15s ease;
+}
+
+.section-toggle-row:hover {
+  background: var(--mat-sys-surface-container-high);
+}
+
+/* Đang mở: nền + icon nổi bật hơn — người dùng nhận ra ngay section nào đang active thay vì
+   chỉ dựa vào chevron xoay (dễ bỏ sót). */
+.section-toggle-row-open {
+  background: var(--mat-sys-surface-container-high);
+}
+
+.section-toggle-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.section-toggle-icon mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.section-toggle-icon-danger {
+  background: color-mix(in srgb, var(--mat-sys-error) 16%, transparent);
+  color: var(--mat-sys-error);
+}
+
+.section-toggle-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.section-toggle-main {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+.section-toggle-sub {
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
+  letter-spacing: 0.04em;
+}
+
+.section-toggle-chevron {
+  flex-shrink: 0;
+  color: var(--mat-sys-on-surface-variant);
+  transition: transform 0.2s ease;
+}
+
+.section-toggle-chevron-open {
+  transform: rotate(180deg);
+}
+
+/* Trượt xuống mềm: max-height đủ lớn cho nội dung + transition, tránh cần JS đo chiều cao thật. */
+.collapsible {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.collapsible-open {
+  grid-template-rows: 1fr;
+}
+
+.collapsible-inner {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 14px;
+}
+
+.collapsible-actions {
+  display: flex;
+  gap: 8px;
+  align-self: flex-start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collapsible {
+    transition: none;
+  }
+}
+
+.danger-zone {
+  border: 1px solid var(--mat-sys-error);
+}
+
+.danger-title {
+  color: var(--mat-sys-error);
+}
+
+.danger-desc {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+  line-height: 1.5;
+}
+
+.delete-btn {
+  /* .collapsible-inner là flex-column mặc định stretch — không có dòng này thì nút bị kéo
+     giãn full-width nhìn trống trải, mất cân đối so với các nút khác trong trang. */
+  align-self: flex-start;
+  --mat-outlined-button-label-text-color: var(--mat-sys-error);
+  --mdc-outlined-button-outline-color: var(--mat-sys-error);
+}
+
+.loading-text {
+  color: var(--mat-sys-on-surface-variant);
+}

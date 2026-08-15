@@ -1,0 +1,44 @@
+<div class="content-page">
+  <a matButton class="content-back" routerLink="/recipes">
+    <mat-icon>arrow_back</mat-icon>
+    {{ i18n.t('content.back') }}
+  </a>
+
+  <h1 class="content-title">{{ i18n.t('terms.pageTitle') }}</h1>
+
+  @if (i18n.locale() === 'vi') {
+    <div class="content-section">
+      <h2>Tài khoản</h2>
+      <p>Bạn chịu trách nhiệm bảo mật thông tin đăng nhập của mình. Mỗi tài khoản có 1 trong 2 vai trò: <strong>user</strong> (xem, thêm công thức) hoặc <strong>admin</strong> (thêm/sửa/xóa công thức, quản lý user).</p>
+    </div>
+    <div class="content-section">
+      <h2>Nội dung người dùng đăng tải</h2>
+      <p>Bạn chịu trách nhiệm về nội dung công thức (tên món, mô tả, ảnh...) mà bạn đăng lên hệ thống. Không đăng nội dung vi phạm pháp luật hoặc quyền sở hữu trí tuệ của người khác.</p>
+    </div>
+    <div class="content-section">
+      <h2>Giới hạn trách nhiệm</h2>
+      <p>Đây là dự án học tập/demo cá nhân, được cung cấp "nguyên trạng" (as-is), không đảm bảo hoạt động liên tục hoặc không có lỗi. Chúng tôi không chịu trách nhiệm cho bất kỳ thiệt hại nào phát sinh từ việc sử dụng ứng dụng.</p>
+    </div>
+    <div class="content-section">
+      <h2>Thay đổi điều khoản</h2>
+      <p>Điều khoản này có thể được cập nhật bất kỳ lúc nào mà không cần báo trước, vì đây là môi trường học tập/thử nghiệm đang phát triển.</p>
+    </div>
+  } @else {
+    <div class="content-section">
+      <h2>Accounts</h2>
+      <p>You are responsible for keeping your login credentials secure. Each account has one of two roles: <strong>user</strong> (view and add recipes) or <strong>admin</strong> (add/edit/delete recipes, manage users).</p>
+    </div>
+    <div class="content-section">
+      <h2>User-generated content</h2>
+      <p>You are responsible for the recipe content (name, description, photo, etc.) you post on the platform. Do not post content that violates the law or infringes on others' intellectual property.</p>
+    </div>
+    <div class="content-section">
+      <h2>Limitation of liability</h2>
+      <p>This is a personal learning/demo project provided "as is", with no guarantee of continuous or error-free operation. We are not liable for any damages arising from the use of this app.</p>
+    </div>
+    <div class="content-section">
+      <h2>Changes to these terms</h2>
+      <p>These terms may be updated at any time without prior notice, as this is an evolving learning/testing environment.</p>
+    </div>
+  }
+</div>

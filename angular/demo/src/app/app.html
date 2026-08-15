@@ -1,0 +1,97 @@
+@if (!isAuthRoute()) {
+  <mat-sidenav-container class="app-container">
+    <mat-sidenav
+      #sidenav
+      class="app-sidenav"
+      [mode]="isDesktop() ? 'side' : 'over'"
+      [opened]="sidenavOpen()"
+      (openedChange)="onSidenavOpenedChange($event)"
+    >
+      <a class="sidenav-brand" routerLink="/recipes" (click)="closeSidenavOnMobile()">
+        <span class="app-logo-badge">
+          <img src="logo-removebg-preview.png" alt="Logo" class="app-logo-img" />
+        </span>
+        <span class="sidenav-brand-title">{{ title() }}</span>
+      </a>
+
+      <nav class="sidenav-nav">
+        <a class="sidenav-link" routerLink="/recipes" routerLinkActive="sidenav-link-active" (click)="closeSidenavOnMobile()">
+          <mat-icon>restaurant_menu</mat-icon><span>{{ i18n.t('nav.recipes') }}</span>
+        </a>
+
+        @if (!authStore.isAdmin()) {
+          <a class="sidenav-link" routerLink="/orders" routerLinkActive="sidenav-link-active" (click)="closeSidenavOnMobile()">
+            <mat-icon id="fly-target-my-orders">receipt_long</mat-icon><span>{{ i18n.t('nav.myOrders') }}</span>
+          </a>
+        }
+
+        <a class="sidenav-link" routerLink="/settings" routerLinkActive="sidenav-link-active" (click)="closeSidenavOnMobile()">
+          <mat-icon>settings</mat-icon><span>{{ i18n.t('nav.settings') }}</span>
+        </a>
+
+        <a class="sidenav-link" routerLink="/account" routerLinkActive="sidenav-link-active" (click)="closeSidenavOnMobile()">
+          <mat-icon>person</mat-icon><span>{{ i18n.t('nav.account') }}</span>
+        </a>
+
+        @if (authStore.isAdmin()) {
+          <div class="sidenav-section-label">{{ i18n.t('nav.admin') }}</div>
+          <a class="sidenav-link" routerLink="/admin/dashboard" routerLinkActive="sidenav-link-active" (click)="closeSidenavOnMobile()">
+            <mat-icon>bar_chart</mat-icon><span>{{ i18n.t('nav.adminDashboard') }}</span>
+          </a>
+          <a class="sidenav-link" routerLink="/admin/orders" routerLinkActive="sidenav-link-active" (click)="closeSidenavOnMobile()">
+            <mat-icon>receipt_long</mat-icon><span>{{ i18n.t('nav.adminOrders') }}</span>
+          </a>
+          <a class="sidenav-link" routerLink="/admin/recipes" routerLinkActive="sidenav-link-active" (click)="closeSidenavOnMobile()">
+            <mat-icon>menu_book</mat-icon><span>{{ i18n.t('nav.adminRecipes') }}</span>
+          </a>
+          <a class="sidenav-link" routerLink="/admin/admins" routerLinkActive="sidenav-link-active" (click)="closeSidenavOnMobile()">
+            <mat-icon>group</mat-icon><span>{{ i18n.t('nav.adminAdmins') }}</span>
+          </a>
+        }
+      </nav>
+
+      <div class="sidenav-footer">
+        <a class="sidenav-user" routerLink="/account" (click)="closeSidenavOnMobile()">
+          <span class="app-avatar-trigger" [class.app-avatar-admin]="authStore.isAdmin()">
+            @if (authStore.user()?.avatarUrl; as avatarUrl) {
+              <img [src]="avatarUrl" alt="" class="app-avatar-img" />
+            } @else {
+              {{ (authStore.user()?.username ?? '?').charAt(0).toUpperCase() }}
+            }
+          </span>
+          <span class="sidenav-user-info">
+            <span class="sidenav-username">{{ authStore.user()?.username }}</span>
+            @if (authStore.isAdmin()) {
+              <span class="app-role-badge">{{ i18n.t('role.admin') }}</span>
+            }
+          </span>
+        </a>
+        <button type="button" class="sidenav-logout-btn" (click)="logout()">
+          <mat-icon>logout</mat-icon>{{ i18n.t('nav.logout') }}
+        </button>
+      </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content (scroll)="onContentScroll($event)" (click)="onContentAreaClick()">
+      <mat-toolbar class="app-topbar" [class.app-topbar-scrolled]="scrolled()">
+        <button
+          matIconButton
+          type="button"
+          (click)="toggleSidenav(); $event.stopPropagation()"
+          [attr.aria-label]="i18n.t('nav.toggleMenu')"
+        >
+          <mat-icon id="fly-target-menu-toggle">menu</mat-icon>
+        </button>
+        <span class="app-topbar-title">{{ title() }}</span>
+      </mat-toolbar>
+
+      <div class="app-shell" #shell>
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+} @else {
+  <div class="app-shell app-shell-bare" #shell>
+    <router-outlet></router-outlet>
+  </div>
+}

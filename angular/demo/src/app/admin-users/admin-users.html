@@ -1,0 +1,56 @@
+<section class="page">
+  <h1 class="page-title">{{ i18n.t('adminUsers.pageTitle') }}</h1>
+
+  <div class="grant-box">
+    <h2 class="section-title">{{ i18n.t('adminUsers.grantSectionTitle') }}</h2>
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>{{ i18n.t('adminUsers.grantSearchLabel') }}</mat-label>
+      <input matInput type="search" [ngModel]="grantSearchTerm()" (ngModelChange)="onGrantSearchChange($event)" />
+      <mat-icon matPrefix>person_search</mat-icon>
+    </mat-form-field>
+
+    @if (grantCandidates().length > 0) {
+      <div class="candidate-list">
+        @for (candidate of grantCandidates(); track candidate.id) {
+          <div class="candidate-row">
+            <span class="candidate-name">{{ candidate.username }} <span class="candidate-email">({{ candidate.email }})</span></span>
+            <button matButton="filled" type="button" (click)="grant(candidate)">
+              <mat-icon>add_moderator</mat-icon>{{ i18n.t('adminUsers.grantAction') }}
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <h2 class="section-title">{{ i18n.t('adminUsers.listSectionTitle') }}</h2>
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>{{ i18n.t('adminUsers.searchLabel') }}</mat-label>
+    <input matInput type="search" [ngModel]="searchTerm()" (ngModelChange)="onSearchChange($event)" />
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+
+  <div class="admin-grid">
+    @for (user of store.users(); track user.id) {
+      <mat-card class="admin-card" appearance="outlined">
+        <div class="admin-card-inner">
+          <div class="admin-avatar">{{ (user.username || '?').charAt(0).toUpperCase() }}</div>
+          <div class="admin-body">
+            <span class="admin-name">{{ user.username }} @if (isSelf(user)) { <span class="self-tag">({{ i18n.t('adminUsers.you') }})</span> }</span>
+            <span class="admin-email">{{ user.email }}</span>
+          </div>
+          @if (!isSelf(user)) {
+            <button matButton type="button" (click)="confirmRevoke(user)">
+              <mat-icon>remove_moderator</mat-icon>{{ i18n.t('adminUsers.revokeAction') }}
+            </button>
+          }
+        </div>
+      </mat-card>
+    } @empty {
+      <div class="empty-state">
+        <span class="material-symbols-outlined empty-state-icon">group_off</span>
+        <p class="empty-title">{{ i18n.t('adminUsers.empty') }}</p>
+      </div>
+    }
+  </div>
+</section>

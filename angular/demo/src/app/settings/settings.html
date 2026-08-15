@@ -1,0 +1,21 @@
+<div class="content-page">
+  <a matButton class="content-back" routerLink="/recipes">
+    <mat-icon>arrow_back</mat-icon>
+    {{ i18n.t('content.back') }}
+  </a>
+
+  <h1 class="content-title">{{ i18n.t('settings.pageTitle') }}</h1>
+
+  <section class="settings-card">
+    <h2 class="settings-card-title">{{ i18n.t('settings.languageTitle') }}</h2>
+    <p class="settings-card-desc">{{ i18n.t('settings.languageDesc') }}</p>
+
+    <mat-form-field appearance="outline" class="settings-select">
+      <mat-label>{{ i18n.t('settings.languageLabel') }}</mat-label>
+      <mat-select [value]="i18n.locale()" (selectionChange)="onLocaleChange($event)">
+        <mat-option value="vi">Tiếng Việt</mat-option>
+        <mat-option value="en">English</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+</div>

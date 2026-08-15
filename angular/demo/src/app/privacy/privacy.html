@@ -1,0 +1,60 @@
+<div class="content-page">
+  <a matButton class="content-back" routerLink="/recipes">
+    <mat-icon>arrow_back</mat-icon>
+    {{ i18n.t('content.back') }}
+  </a>
+
+  <h1 class="content-title">{{ i18n.t('privacy.pageTitle') }}</h1>
+
+  @if (i18n.locale() === 'vi') {
+    <div class="content-section">
+      <h2>Dữ liệu chúng tôi thu thập</h2>
+      <ul>
+        <li>Username, email, họ tên (tuỳ chọn) — khi bạn đăng ký tài khoản.</li>
+        <li>Mật khẩu — được băm (hash) bằng bcrypt trước khi lưu, chúng tôi không bao giờ lưu hoặc nhìn thấy mật khẩu gốc của bạn.</li>
+        <li>Nội dung công thức (tên món, mô tả, nguyên liệu, ảnh) bạn tạo trên hệ thống.</li>
+      </ul>
+    </div>
+    <div class="content-section">
+      <h2>Mục đích sử dụng</h2>
+      <ul>
+        <li>Xác thực đăng nhập và phân quyền tài khoản.</li>
+        <li>Gửi email đặt lại mật khẩu khi bạn yêu cầu.</li>
+        <li>Hiển thị công thức bạn đã tạo cho chính bạn và người dùng khác trong hệ thống.</li>
+      </ul>
+    </div>
+    <div class="content-section">
+      <h2>Chia sẻ dữ liệu</h2>
+      <p>Chúng tôi không bán hoặc chia sẻ dữ liệu cá nhân của bạn cho bên thứ ba nào ngoài mục đích vận hành ứng dụng (ví dụ: dịch vụ gửi email đặt lại mật khẩu).</p>
+    </div>
+    <div class="content-section">
+      <h2>Lưu ý</h2>
+      <p>Đây là ứng dụng học tập/demo cá nhân, không phải sản phẩm thương mại — dữ liệu được lưu trên cơ sở dữ liệu riêng phục vụ mục đích học tập.</p>
+    </div>
+  } @else {
+    <div class="content-section">
+      <h2>Data we collect</h2>
+      <ul>
+        <li>Username, email, and full name (optional) — when you register an account.</li>
+        <li>Password — hashed with bcrypt before storage; we never store or see your plain-text password.</li>
+        <li>Recipe content (name, description, ingredients, photo) you create on the platform.</li>
+      </ul>
+    </div>
+    <div class="content-section">
+      <h2>How we use it</h2>
+      <ul>
+        <li>Authenticate logins and enforce account permissions.</li>
+        <li>Send password reset emails when you request them.</li>
+        <li>Display the recipes you create to you and other users on the platform.</li>
+      </ul>
+    </div>
+    <div class="content-section">
+      <h2>Data sharing</h2>
+      <p>We do not sell or share your personal data with any third party beyond what's needed to operate the app (e.g. the password-reset email service).</p>
+    </div>
+    <div class="content-section">
+      <h2>Note</h2>
+      <p>This is a personal learning/demo application, not a commercial product — data is stored on a private database for learning purposes only.</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,296 @@
+.page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+h2 {
+  margin: 0 0 20px 0;
+  /* Sans-serif thay vì Georgia — Georgia vỡ dấu tổ hợp tiếng Việt (ồ, ề...) trên nhiều máy. */
+  font-family: var(--mat-sys-body-medium-font, Roboto, sans-serif);
+  font-size: 26px;
+  /* M3 heading: Medium (500), không dùng bold 700. */
+  font-weight: 500;
+  color: #2b2420;
+}
+
+.recipe-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(60, 45, 30, 0.12);
+  padding: 24px;
+}
+
+/* M3 Outlined TextField: bo góc 4px, viền dày 2px + đổi màu Primary khi focus — đồng bộ account.css. */
+.recipe-form mat-form-field {
+  --mdc-outlined-text-field-container-shape: 4px;
+  --mdc-outlined-text-field-focus-outline-width: 2px;
+  --mdc-outlined-text-field-focus-outline-color: var(--mat-sys-primary);
+}
+
+.recipe-form button[type="submit"] {
+  --mdc-filled-button-container-shape: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.field-input {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  /* M3 Outlined field: bo góc 4px thay vì 8px, đồng bộ với account.css. */
+  border-radius: 4px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.field-input:focus {
+  border: 2px solid var(--mat-sys-primary);
+  padding: 9px 13px; /* trừ đi 1px border tăng thêm để tránh nhảy layout */
+}
+
+.field-input.ng-invalid.ng-touched {
+  border-color: var(--mat-sys-error);
+}
+
+.back-link {
+  display: block;
+  width: fit-content;
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+.ingredients-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ingredients-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ingredient-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ingredient-name-field {
+  flex: 2;
+}
+
+.ingredient-qty-field {
+  flex: 1;
+  min-width: 70px;
+}
+
+.ingredient-unit-field {
+  flex: 1;
+  min-width: 80px;
+}
+
+/* ===================== Hình ảnh món ăn ===================== */
+.image-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.image-section-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.required-star {
+  color: var(--mat-sys-error);
+}
+
+.image-mode-toggle {
+  align-self: flex-start;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  /* align-items: start (thay vì stretch) — mỗi cột tự quyết định chiều cao
+     theo nội dung riêng, không kéo khung preview giãn theo cột nhập ảnh.
+     Nếu không, preview sẽ đổi kích thước tuỳ theo đang ở tab "Tải ảnh lên"
+     (khung cao) hay "Dán link" (chỉ 1 ô input thấp). */
+  align-items: start;
+}
+
+.image-input-col,
+.image-preview-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dropzone {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 2px dashed var(--mat-sys-outline);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  padding: 16px;
+  box-sizing: border-box;
+  color: var(--mat-sys-on-surface-variant);
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.dropzone:hover,
+.dropzone.dropzone-over {
+  border-color: var(--mat-sys-primary);
+  background: color-mix(in srgb, var(--mat-sys-primary) 6%, transparent);
+}
+
+.dropzone-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  color: var(--mat-sys-primary);
+}
+
+.dropzone-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dropzone-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.visually-hidden-file-input {
+  display: none;
+}
+
+.image-link-field {
+  width: 100%;
+}
+
+.image-error {
+  margin: 0;
+  font-size: 12px;
+  color: var(--mat-sys-error);
+}
+
+.image-preview-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mat-sys-surface-container);
+}
+
+.image-preview-box.image-preview-empty {
+  border: 2px dashed var(--mat-sys-outline);
+  background: transparent;
+}
+
+.preview-placeholder-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: var(--mat-sys-outline);
+  opacity: 0.7;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.preview-clear-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.preview-clear-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #fff;
+}
+
+.preview-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--mat-sys-error);
+  text-align: center;
+  padding: 12px;
+}
+
+.preview-error p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.image-field-error {
+  margin: 0;
+  font-size: 12px;
+  color: var(--mat-sys-error);
+}
+
+@media (max-width: 640px) {
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+}

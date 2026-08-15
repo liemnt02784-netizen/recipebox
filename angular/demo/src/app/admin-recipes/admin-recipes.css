@@ -1,0 +1,128 @@
+.page {
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 12px 16px 24px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .page {
+    max-width: 1000px;
+  }
+}
+
+.page-title {
+  font-size: 20px;
+  /* M3 heading: Medium (500), không dùng bold 700. */
+  font-weight: 500;
+  margin: 4px 0 16px;
+}
+
+.search-field {
+  width: 100%;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  /* M3 search bar: pill shape, đồng bộ với trang recipe-list. */
+  --mdc-outlined-text-field-container-shape: 28px;
+  --mdc-outlined-text-field-outline-width: 0;
+  --mdc-outlined-text-field-focus-outline-width: 2px;
+  --mdc-outlined-text-field-focus-outline-color: var(--mat-sys-primary);
+  --mdc-outlined-text-field-container-color: var(--mat-sys-surface-container-high);
+}
+
+.search-field .mat-mdc-text-field-wrapper {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.recipe-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 1024px) {
+  /* Trang quản trị ưu tiên mật độ + thao tác nhanh (Sửa/Xoá) hơn là hình ảnh to —
+     giữ layout hàng ngang, chỉ chia 2 cột để đỡ 1 cột hẹp lọt thỏm giữa màn rộng. */
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.recipe-card-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 14px;
+  gap: 16px;
+  background: var(--mat-sys-surface-container-lowest);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.recipe-thumb {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+  border-radius: 12px;
+}
+
+.recipe-card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding: 0 !important;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.recipe-card-name {
+  color: var(--mat-sys-on-surface);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recipe-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.recipe-card-actions button {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.recipe-card-actions button:hover mat-icon {
+  color: var(--mat-sys-primary);
+}
+
+.recipe-card-actions button:last-child:hover mat-icon {
+  color: var(--mat-sys-error);
+}
+
+.empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+  padding: 20px;
+}
+
+.add-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}

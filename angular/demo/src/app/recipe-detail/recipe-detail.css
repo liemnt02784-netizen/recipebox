@@ -1,0 +1,206 @@
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 32px;              /* tăng từ 25px cho cân với card 720px */
+  gap: 20px;                  /* tăng từ 16px */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  background: var(--mat-sys-surface-container-lowest);
+}
+
+.recipe-image-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;       /* thay cho height cố định 260px, tỷ lệ đẹp & responsive */
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.recipe-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.recipe-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.recipe-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recipe-title {
+  margin: 0;
+  /* Sans-serif thay vì Georgia — Georgia vỡ dấu tổ hợp tiếng Việt (ồ, ề...) trên nhiều máy. */
+  font-family: var(--mat-sys-body-medium-font, Roboto, sans-serif);
+  font-size: 36px;            /* tăng từ 32px */
+  /* M3 heading: Medium (500), không dùng bold 700. */
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.recipe-description {
+  margin: 0;
+  font-size: 18px;            /* tăng từ 17px */
+  line-height: 1.5;
+}
+
+.portion-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  align-self: center;
+  background: var(--mat-sys-surface-container);
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.portion-count {
+  margin: 0;
+  min-width: 90px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.place-order-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  height: 52px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.place-order-btn:not(:disabled):hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.24);
+  transform: translateY(-1px);
+}
+
+.place-order-btn mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+.place-order-spinner {
+  --mdc-circular-progress-active-indicator-color: currentColor;
+}
+
+.ingredients {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ingredients-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.back-link {
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+  width: fit-content;
+  margin-bottom: 16px;
+}
+.ingredient-item .ingredient-name {
+  font-size: 18px;            /* tăng từ 17px */
+  font-weight: 500;
+}
+
+.ingredient-item .ingredient-amount {
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;            /* tăng từ 15px */
+  font-weight: 500;
+  color: var(--mat-sys-primary);
+}
+.ingredient-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;            /* tăng nhẹ từ 15px */
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 300px;
+  margin-top: 40px;
+  color: var(--mat-sys-on-surface-variant);
+  animation: fade-in 0.3s ease-in;
+}
+
+.loading-wrap p {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  margin: 0;
+}
+
+.loading-wrap mat-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--mat-sys-primary);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  margin-top: 40px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 16px;
+  font-weight: 500;
+}
+.ingredient-item:last-child {
+  border-bottom: none;
+}
+.not-found {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  padding: 40px 0;
+}
+.recipe-author {
+  margin: 0;
+  font-size: 16px;
+  color: var(--mat-sys-on-surface-variant);
+  font-style: italic;
+}

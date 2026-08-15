@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nestjs-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start:dev", "--prefix", "nestjs"],
+      "port": 3000
+    },
+    {
+      "name": "angular-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start", "--prefix", "angular/demo"],
+      "port": 4200
+    }
+  ]
+}

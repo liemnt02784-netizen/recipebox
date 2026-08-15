@@ -1,0 +1,16 @@
+<div class="id-footer">
+  <select
+    class="id-lang-select"
+    aria-label="Language"
+    [value]="i18n.locale()"
+    (change)="onLocaleChange($event)"
+  >
+    <option value="vi">Tiếng Việt</option>
+    <option value="en">English</option>
+  </select>
+  <div class="id-legal-links">
+    <a routerLink="/help" target="_blank">{{ i18n.t('footer.help') }}</a>
+    <a routerLink="/privacy" target="_blank">{{ i18n.t('footer.privacy') }}</a>
+    <a routerLink="/terms" target="_blank">{{ i18n.t('footer.terms') }}</a>
+  </div>
+</div>
